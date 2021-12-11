@@ -1,15 +1,24 @@
 add_library('minim')
 import random 
 
-
+ 
 def setup():
-    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong
     size(700,750)
+    minim = Minim(this)
+    introsong = minim.loadFile('intro.mp3')
+    roundsong = minim.loadFile('round.mp3')
+    endsong = minim.loadFile('gameover.mp3')
+    winsong = minim.loadFile('gamewon.mp3')
+    
+    
     introimage = loadImage('intro.jpg')
     cannon = loadImage('cannon.png')
     alien = loadImage('alien2.png')
     alien.resize(30, 0)
-    cannonx = (width/2)-(450/16)
+    cannonx = 0
+    #321.875 # middle of screen
+    
     game_state = 0 
     score = 0 
     invasion = [[1 for x in range(11)] for i in range(5)]
@@ -17,13 +26,14 @@ def setup():
     alieny = 50
     
     alienvx = 1
-    alienvy = 40
+    alienvy = 10
     
     laserShot = False
-    
+
     bullety = 0
-    
-    
+    left = False
+    right = False
+    num = 0
     
     
 
@@ -33,17 +43,36 @@ def draw():
 
 
 
+
 def gameplay(): 
     global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     if game_state == 1:
         background(0,0,0)
-        image(cannon, cannonx, 606.25, 450/8, 350/8)
+        image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
         #image(alien,0,0)
         spawnAliens()
-        
+        sm()
+    
         if laserShot:
             cbullet()
 
+
+def sm(): 
+    global left, right, game_state, num, cannonx
+    
+    if left:
+        cannonx -= 5 
+        num += 5
+    
+    if right:
+        cannonx += 5 
+        num += 5 
+        
+        
+    if num == 20:
+        num = 0 
+        left = False 
+        right = False
 
 def spawnAliens():
     global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
@@ -71,7 +100,7 @@ def spawnAliens():
 
     
             
-        
+    
         
 
     
@@ -83,29 +112,29 @@ def intro():
 
 def cbullet():
     global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
-    rect(bulletx, 606.25 - bullety, 5, 15) 
-    bullety += 5
+    
+    rect(bulletx - 2.5, 606.25 - bullety, 5, 15) 
+    bullety += 8
     
     if bullety > 500:
         bullety = 0
         laserShot = False
         
 def keyPressed():
-    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right
     if game_state == 0 and key == "s":
         game_state = 1
 
     if game_state == 1:
         if key == CODED:
-            if keyCode == RIGHT and cannonx< (681-(450/8)):
-                    cannonx += 20
-            elif keyCode == LEFT and cannonx>19:
-                cannonx -= 20
-                
-        if key == ' ':
+            if keyCode == RIGHT and cannonx< (681-(450/8)) and left == False:
+                    right = True
+            elif keyCode == LEFT and cannonx>19 and right == False:
+                left = True 
+        if key == ' ' and laserShot == False :
             laserShot = True
-            bulletx = cannonx
-
+            bulletx = cannonx+28.125
+  
             
     
             
