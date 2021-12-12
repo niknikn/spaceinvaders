@@ -3,13 +3,14 @@ import random
 
  
 def setup():
-    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state
+    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     size(700,750)
     minim = Minim(this)
     introsong = minim.loadFile('intro.mp3')
     roundsong = minim.loadFile('round.mp3')
     endsong = minim.loadFile('gameover.mp3')
     winsong = minim.loadFile('gamewon.mp3')
+    shootsound = minim.loadFile('shoot.wav')
     
     
     introimage = loadImage('intro.jpg')
@@ -149,7 +150,7 @@ def cbullet():
         laserShot = False
         
 def keyPressed():
-    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state
+    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
     
     if game_state == 0 and key == "s":
         game_state = 1
@@ -161,9 +162,11 @@ def keyPressed():
                     right = True
             elif keyCode == LEFT and cannonx>19 and right == False:
                 left = True 
+                
         if key == ' ' and laserShot == False :
             laserShot = True
             bulletx = cannonx+28.125
+            shootsound.play()
   
             
     
