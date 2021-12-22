@@ -3,13 +3,14 @@ import random
 
  
 def setup():
-    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong
+    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     size(700,750)
     minim = Minim(this)
     introsong = minim.loadFile('intro.mp3')
     roundsong = minim.loadFile('round.mp3')
     endsong = minim.loadFile('gameover.mp3')
     winsong = minim.loadFile('gamewon.mp3')
+    shootsound = minim.loadFile('shoot.wav')
     
     
     introimage = loadImage('intro.jpg')
@@ -34,15 +35,43 @@ def setup():
     left = False
     right = False
     num = 0
+    music_state = 0
     
     
 
 def draw():
     intro()
     gameplay()
+    music()
+    
 
 
-
+def music():
+    global music_state, game_state
+    
+    if music_state == 0:
+        if introsong.isPlaying():
+            introsong.pause()
+            introsong.rewind()
+        elif roundsong.isPlaying():
+            roundsong.pause()
+            roundsong.rewind()
+        elif endsong.isPlaying():
+            endsong.pause()
+            endsong.rewind()
+        elif winsong.isPlaying():
+            winsong.pause()
+            winsong.rewind()
+        
+            
+    
+    if game_state == 0 and music_state == 0:
+        introsong.loop()
+        music_state = 1
+    if game_state == 1 and music_state == 0:
+        roundsong.loop()
+        music_state = 1 
+        
 
 def gameplay(): 
     global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
@@ -121,9 +150,11 @@ def cbullet():
         laserShot = False
         
 def keyPressed():
-    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right
+    global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
+    
     if game_state == 0 and key == "s":
         game_state = 1
+        music_state = 0 
 
     if game_state == 1:
         if key == CODED:
@@ -131,9 +162,11 @@ def keyPressed():
                     right = True
             elif keyCode == LEFT and cannonx>19 and right == False:
                 left = True 
+                
         if key == ' ' and laserShot == False :
             laserShot = True
             bulletx = cannonx+28.125
+            shootsound.play()
   
             
     
