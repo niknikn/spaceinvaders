@@ -104,13 +104,26 @@ def sm():
         right = False
 
 def spawnAliens():
-    global bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     
     # generate aliens
     for row in range(len(invasion[0])):
         for col in range(len(invasion)):
             if invasion[col][row] == 1:
                 image(alien, alienx + row * 50, alieny + col * 40)
+                
+                #draw hitboxes
+                noFill()
+                stroke(102,255,0)
+                rect(alienx+row*50, alieny+col * 40, 30,22.4)
+                
+                
+                
+                
+                
+                
+                
+                
                 
     # change alien movement
     alienx += alienvx
@@ -141,7 +154,8 @@ def intro():
 
 def cbullet():
     global bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
-    
+    fill(255)
+    stroke(255)
     rect(bulletx - 2.5, 606.25 - bullety, 5, 15) 
     bullety += 8
     
