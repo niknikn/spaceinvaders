@@ -36,7 +36,7 @@ def setup():
     right = False
     num = 0
     music_state = 0
-    
+    score = 0
     
 
 def draw():
@@ -104,7 +104,7 @@ def sm():
         right = False
 
 def spawnAliens():
-    global bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
     
     # generate aliens
     for row in range(len(invasion[0])):
@@ -116,7 +116,19 @@ def spawnAliens():
                 noFill()
                 stroke(102,255,0)
                 rect(alienx+row*50, alieny+col * 40, 30,22.4)
+                #check for overlap 
                 
+                if ((606.25 - bullety < (alieny+col * 40)) and (606.25 - bullety > (alieny+col * 40 - 22.4))) and ((bulletx - 2.5 > alienx + row * 50 and bulletx -2.5 < alienx + row * 50+30) or (bulletx + 2.5 > alienx + row * 50 and bulletx + 2.5 < alienx + row * 50+30)) :
+                    print("true")
+                    bullety = 0
+                    laserShot = False 
+                    invasion[col][row] = 0 
+                    score += 10#change to correct amount 
+                
+                
+                        
+                          
+    
                 
                 
                 
@@ -142,9 +154,6 @@ def spawnAliens():
 
     
             
-    
-        
-
     
         
 def intro():
