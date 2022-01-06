@@ -1,8 +1,6 @@
 add_library('minim')
 import random 
 
- 
- 
 def setup():
     global bulletbuffer, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     size(700,750)
