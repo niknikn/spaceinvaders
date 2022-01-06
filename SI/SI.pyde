@@ -17,7 +17,7 @@ def setup():
     alien = loadImage('alien2.png')
     alien.resize(30, 0)
     cannonx = 0
-    #321.875 # middle of screen
+
     
     game_state = 0
     score = 0 
@@ -46,7 +46,7 @@ def setup():
 def draw():
     intro()
     gameplay()
-    music()
+    '''music()'''
     
 
 
@@ -82,7 +82,7 @@ def gameplay():
     if game_state == 1:
         background(0,0,0)
         image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
-        image(alien,0,0)
+    
         spawnAliens()
         sm()
         
