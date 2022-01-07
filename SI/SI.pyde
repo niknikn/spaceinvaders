@@ -87,6 +87,7 @@ def gameplay():
     
         spawnAliens()
         sm()
+        movealiens()
         
     for i in range(len(bulletpos)):
         # changed cbullet() in to a function that takes 2 args: x pos and y incr of bullet
@@ -118,6 +119,33 @@ def sm():
         left = False 
         right = False
 
+
+def movealiens():
+    global bulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
+    for row in range(len(invasion[0])):
+        for col in range(len(invasion)):
+            if invasion[col][row] == 1:
+                if alienx+row*50 + 30 > width:
+                    alienvx *= -1
+                    alieny += alienvy
+                    break
+            
+            
+                if alienx+row*50 < 0:
+                    alienvx *= -1
+                    alieny += alienvy
+                    break
+                    
+                if alieny + col * 40 + 22.4 > 606.25:
+                    alienvy = 0
+                
+    
+    
+
+
+
+
+
 def spawnAliens():
     global bulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
     
@@ -133,11 +161,18 @@ def spawnAliens():
                 rect(alienx+row*50, alieny+col * 40, 30,22.4)
                 #checks for overlap of each bullet every frame
                 
+                
+
+                
+                
+                
+                
+                
                 #bulletpos[i][1] is the y increment of the bullet in index i
                 #bulletpos[i][0] is the x value of the bullet in index i
                 
                 for i in range(len(bulletpos)):
-                    if ((606.25 - bulletpos[i][1] < (alieny+col * 40)) and (606.25 - bulletpos[i][1] > (alieny+col * 40 - 22.4))) and ((bulletpos[i][0] - 2.5 > alienx + row * 50 and bulletpos[i][0] -2.5 < alienx + row * 50+30) or (bulletpos[i][0] + 2.5 > alienx + row * 50 and bulletpos[i][0] + 2.5 < alienx + row * 50+30)) :
+                    if ((606.25 - bulletpos[i][1] > (alieny+col * 40)) and (606.25 - bulletpos[i][1] < (alieny+col * 40 + 22.4))) and ((bulletpos[i][0] - 2.5 > alienx + row * 50 and bulletpos[i][0] -2.5 < alienx + row * 50+30) or (bulletpos[i][0] + 2.5 > alienx + row * 50 and bulletpos[i][0] + 2.5 < alienx + row * 50+30)) :
                         print("true")
                         
                         # despawns bullet that hit an alien
@@ -152,34 +187,12 @@ def spawnAliens():
                         laserShot = False 
                         invasion[col][row] = 0 
                         score += 10#change to correct amount 
-                
-                
-                        
-                          
-    
-                
-                
-                
-                
-                
-                
-                
-                
-    # change alien movement
-    alienx += alienvx
-    
-    if alienx + 530 > width:
-        alienvx *= -1
-        alieny += alienvy
-
-
-    if alienx < 0:
-        alienvx *= -1
-        alieny += alienvy
+            # change alien movement
         
-    if alieny > 606.25 - 40*5:
-        alienvy = 0
-
+            
+                
+    alienx += alienvx
+        
     
             
     
@@ -221,7 +234,7 @@ def keyPressed():
             # does not spam lasers
             print(bulletpos)
             
-            shootsound.play()
+            '''shootsound.play()'''
   
             
     
