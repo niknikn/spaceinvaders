@@ -4,7 +4,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global bulletbuffer, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global myFont, bulletbuffer, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     size(700,750)
     minim = Minim(this)
     introsong = minim.loadFile('intro.mp3')
@@ -12,6 +12,7 @@ def setup():
     endsong = minim.loadFile('gameover.mp3')
     winsong = minim.loadFile('gamewon.mp3')
     shootsound = minim.loadFile('shoot.wav')
+    myFont = createFont("si.ttf", 16)
     
     
     introimage = loadImage('intro.jpg')
@@ -87,6 +88,7 @@ def gameplay():
     
         spawnAliens()
         sm()
+        scoreboard()
         
     for i in range(len(bulletpos)):
         # changed cbullet() in to a function that takes 2 args: x pos and y incr of bullet
@@ -138,7 +140,7 @@ def spawnAliens():
                 
                 for i in range(len(bulletpos)):
                     if ((606.25 - bulletpos[i][1] < (alieny+col * 40)) and (606.25 - bulletpos[i][1] > (alieny+col * 40 - 22.4))) and ((bulletpos[i][0] - 2.5 > alienx + row * 50 and bulletpos[i][0] -2.5 < alienx + row * 50+30) or (bulletpos[i][0] + 2.5 > alienx + row * 50 and bulletpos[i][0] + 2.5 < alienx + row * 50+30)) :
-                        print("true")
+                   
                         
                         # despawns bullet that hit an alien
                         bulletpos[i][1] = 900
@@ -157,7 +159,6 @@ def spawnAliens():
                         
                           
     
-                
                 
                 
                 
@@ -189,6 +190,15 @@ def intro():
     if game_state == 0:
         image(introimage,0,0)
 
+def scoreboard():
+    global score, myFont
+    textFont(myFont)
+    textSize(32)
+    textAlign(CENTER)
+    text("Score: %i" %(score),125,690)
+
+    
+
 def cbullet(x, y):
     global bulletbuffer, bulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     fill(255)
@@ -219,9 +229,9 @@ def keyPressed():
             #bulletbuffer = 0 
             #trying to implement time buffer between each bullet shot, so player
             # does not spam lasers
-            print(bulletpos)
+            #print(bulletpos)
             
-            shootsound.play()
+            #shootsound.play()
   
             
     
