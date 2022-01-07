@@ -89,6 +89,7 @@ def gameplay():
         image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
     
         spawnAliens()
+        movealiens()
         sm()
         scoreboard()
         
@@ -107,6 +108,24 @@ def gameplay():
     if bulletdelay <= delaylen:
         bulletdelay += 1
 
+def movealiens():
+    global bulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
+    for row in range(len(invasion[0])):
+        for col in range(len(invasion)):
+            if invasion[col][row] == 1:
+                if alienx+row*50 + 30 > width:
+                    alienvx *= -1
+                    alieny += alienvy
+                    break
+            
+            
+                if alienx+row*50 < 0:
+                    alienvx *= -1
+                    alieny += alienvy
+                    break
+                    
+                if alieny + col * 40 + 22.4 > 606.25:
+                    alienvy = 0
 
 def sm(): 
     global left, right, game_state, num, cannonx
@@ -159,34 +178,9 @@ def spawnAliens():
                         laserShot = False 
                         invasion[col][row] = 0 
                         score += 10#change to correct amount 
-                
-                
-                        
-                          
-    
-                
-                
-                
-                
-                
-                
-                
-    # change alien movement
     alienx += alienvx
     
-    if alienx + 530 > width:
-        alienvx *= -1
-        alieny += alienvy
 
-
-    if alienx < 0:
-        alienvx *= -1
-        alieny += alienvy
-        
-    if alieny > 606.25 - 40*5:
-        alienvy = 0
-
-    
             
     
         
