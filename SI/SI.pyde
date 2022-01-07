@@ -4,7 +4,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global myFont, bulletbuffer, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global bulletdelay, delaylen, myFont, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     size(700,750)
     minim = Minim(this)
     introsong = minim.loadFile('intro.mp3')
@@ -37,6 +37,8 @@ def setup():
     
     # stores x position and y increment (actual bullet pos found with 606.25 - y) of each bullet as a list inside bulletpos list
     bulletpos = []
+    bulletdelay = 46
+    delaylen = bulletdelay + 1
 
     
     left = False
@@ -81,7 +83,7 @@ def music():
         
 
 def gameplay(): 
-    global bulletbuffer, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bulletdelay, delaylen, bulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     if game_state == 1:
         background(0,0,0)
         image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
@@ -101,6 +103,9 @@ def gameplay():
     # that have a y increment less than 606.25
     # basically just gets rid of bullets that are out of bounds
     bulletpos = [ pos for pos in bulletpos if pos[1] < 606.25 ]
+    
+    if bulletdelay <= delaylen:
+        bulletdelay += 1
 
 
 def sm(): 
@@ -200,7 +205,7 @@ def scoreboard():
     
 
 def cbullet(x, y):
-    global bulletbuffer, bulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
+    global bulletdelay, delaylen, bulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     fill(255)
     stroke(255)
     rect(x - 2.5, 606.25 - y, 5, 15) 
@@ -209,7 +214,7 @@ def cbullet(x, y):
         
         
 def keyPressed():
-    global bulletbuffer, bulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
+    global bulletdelay, delaylen, bulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
     
     if game_state == 0 and key == "s":
         game_state = 1
@@ -222,11 +227,11 @@ def keyPressed():
             elif keyCode == LEFT and cannonx>19 and right == False:
                 left = True 
                 
-        if key == ' ':
+        if key == ' ' and bulletdelay > delaylen:
             # laserShot = True
             # bulletx = cannonx+28.125
             bulletpos.append([cannonx+28.125, 0])
-            #bulletbuffer = 0 
+            bulletdelay = 0 
             #trying to implement time buffer between each bullet shot, so player
             # does not spam lasers
             #print(bulletpos)
