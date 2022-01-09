@@ -4,7 +4,8 @@ add_library('minim')
 import random 
 
 def setup():
-    global numPlayerLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global won, endimagew ,endimagel, numPlayerLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+
     size(700,750)
     
     minim = Minim(this)
@@ -17,6 +18,10 @@ def setup():
     myFont = createFont("si.ttf", 16)
     
     # images -----------------
+    endimagew = loadImage('siendw.png')
+    endimagel = loadImage('siendl.png')
+    won = None
+
     introimage = loadImage('intro.jpg')
     cannon = loadImage('cannon.png')
     alien = loadImage('alien2.png')
@@ -24,7 +29,7 @@ def setup():
     cannonx = 0
     
     # game state variable -----------
-    game_state = 1
+    game_state = 0
     
     # alien spawn variables -----------
     invasion = [[1 for x in range(11)] for i in range(5)]
@@ -68,6 +73,7 @@ def setup():
 def draw():
     intro()
     gameplay()
+    endscreen()
     '''music()'''
     
 
@@ -113,6 +119,7 @@ def gameplay():
         movealiens()
         sm()
         scoreboard()
+        checkforend()
         
         for i in range(len(cbulletpos)):
             # cbullet takes 2 args: x pos and y incr of bullet
@@ -210,6 +217,7 @@ def isPlayerHit():
 def movealiens():
     global cbulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
     
+
     for row in range(len(invasion[0])):
         for col in range(len(invasion)):
             
@@ -227,7 +235,21 @@ def movealiens():
                     
                 if alieny + col * 40 + 22.4 > 606.25:
                     alienvy = 0
-
+        
+def checkforend():
+    global game_state, invasion, alieny, alienvy, score, won
+    if game_state == 1:
+        for row in range(len(invasion[0])):
+            for col in range(len(invasion)):
+                if invasion[col][row] == 1:
+                    if alieny + col * 40 + 22.4 > 606.25:
+                        alienvy = 0
+                        game_state = 2 
+                        won = False
+        if score == 550:
+            game_state = 2
+            won = True
+        
 def sm(): 
     global left, right, game_state, num, cannonx
     
@@ -303,8 +325,16 @@ def cbullet(x, y):
     stroke(255)
     rect(x, 606.25 - y, 5, 15) 
     
+def endscreen(): 
+    global game_state, endimagel,endimagew, won
+    if game_state == 2:
         
-        
+        if won == True:
+            image(endimagew,0,0)
+
+        else:
+            image(endimagel,0,0)
+            
 def keyPressed():
     global bulletdelay, delaylen, cbulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
     
@@ -329,8 +359,3 @@ def keyPressed():
             #print(cbulletpos)
             
             #shootsound.play()
-  
-            
-    
-            
-        
