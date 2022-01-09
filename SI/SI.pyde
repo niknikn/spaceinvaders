@@ -4,7 +4,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global won, endimagew ,endimagel, numPlayerLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
 
     size(700,750)
     
@@ -29,7 +29,7 @@ def setup():
     cannonx = 0
     
     # game state variable -----------
-    game_state = 0
+    game_state = 1
     
     # alien spawn variables -----------
     invasion = [[1 for x in range(11)] for i in range(5)]
@@ -59,7 +59,9 @@ def setup():
     adelaylen = abulletdelay - 1 
     
     # life counter variables -----------
-    numPlayerLives = 3
+    numLives = 3
+    XlifeCounter = 60
+    YlifeCounter = 690
     
     # ---------
     left = False
@@ -110,7 +112,7 @@ def music():
         
 
 def gameplay(): 
-    global hitnum, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     if game_state == 1:
         background(0,0,0)
         image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
@@ -120,6 +122,7 @@ def gameplay():
         sm()
         scoreboard()
         checkforend()
+        lifeCounter()
         
         for i in range(len(cbulletpos)):
             # cbullet takes 2 args: x pos and y incr of bullet
@@ -162,17 +165,31 @@ def gameplay():
                 
                 # move the bullet out of the screen if it has hit
                 abulletpos[i][1] = 1000
-                # hitnum +=1
+                numLives -= 1
                 # print("hit {} times".format(hitnum))
 
             
         # despawn all bullets which are out of bounds
-        abulletpos = [ pos for pos in abulletpos if pos[1] < 650.25 + 350/8 ]
+        abulletpos = [ pos for pos in abulletpos if pos[1] < 606.25 + 350/8 + 10 ]
         
         # delay length between alien bullets changes based on how close 
         # the aliens are to the bottom of the screen
         adelaylen = (606.25-alieny)/5
     
+# displays life counter
+def lifeCounter():
+    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+
+    #rect(XlifeCounter, YlifeCounter, 20,20)
+    textSize(30)
+    text("{}".format(numLives), XlifeCounter, YlifeCounter + 35)
+    
+    for life in range(numLives):
+        
+        image(cannon, XlifeCounter + 50 + life*65, YlifeCounter, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
+
+
+
 # randomly chooses an alien to shoot a bullet
 # only aliens that are the bottom of each column can shoot a bullet
 def whichAlienShoots():
@@ -239,13 +256,17 @@ def movealiens():
 def checkforend():
     global game_state, invasion, alieny, alienvy, score, won
     if game_state == 1:
+        
         for row in range(len(invasion[0])):
             for col in range(len(invasion)):
+                
                 if invasion[col][row] == 1:
-                    if alieny + col * 40 + 22.4 > 606.25:
+                    if alieny + col * 40 + 22.4 > 606.25 or numLives == 0:
+                        
                         alienvy = 0
                         game_state = 2 
                         won = False
+                        
         if score == 550:
             game_state = 2
             won = True
