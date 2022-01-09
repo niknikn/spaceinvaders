@@ -4,7 +4,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global counterLine, YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
 
     size(700,750)
     
@@ -45,7 +45,7 @@ def setup():
     cbulletpos = []
     
     # stores how long has passed since user shot the last laser
-    bulletdelay = 2
+    bulletdelay = 45
     
     # stores the delay length between bullets
     delaylen = bulletdelay - 1
@@ -62,6 +62,8 @@ def setup():
     numLives = 3
     XlifeCounter = 60
     YlifeCounter = 690
+    
+    counterLine = YlifeCounter - 5
     
     # ---------
     left = False
@@ -113,6 +115,22 @@ def music():
 
 def gameplay(): 
     global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    testlist = []
+    for g in range(len(invasion)):
+        for h in range(len(invasion[0])):
+            testlist.append(invasion[g][h])
+    
+    
+                            
+    numAliens = testlist.count(0)
+    
+    rate = 60 + numAliens 
+    
+    print(testlist)
+    
+    frameRate(rate)
+    
+    
     if game_state == 1:
         background(0,0,0)
         image(cannon, cannonx, 606.25, 450/8, 350/8) #resizes cannon to one eight its orignal size and places it at the right spot 
@@ -170,7 +188,7 @@ def gameplay():
 
             
         # despawn all bullets which are out of bounds
-        abulletpos = [ pos for pos in abulletpos if pos[1] < 606.25 + 350/8 + 10 ]
+        abulletpos = [ pos for pos in abulletpos if pos[1] < counterLine - 10 ]
         
         # delay length between alien bullets changes based on how close 
         # the aliens are to the bottom of the screen
@@ -178,11 +196,14 @@ def gameplay():
     
 # displays life counter
 def lifeCounter():
-    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global counterLine, YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
 
     #rect(XlifeCounter, YlifeCounter, 20,20)
     textSize(30)
     text("{}".format(numLives), XlifeCounter, YlifeCounter + 35)
+    
+    stroke("#30df3c")
+    line(0, YlifeCounter - 2, 700, counterLine)
     
     for life in range(numLives):
         
@@ -300,7 +321,8 @@ def spawnAliens():
                 #draw hitboxes
                 noFill()
                 stroke(102,255,0)
-                rect(alienx+row*50, alieny+col * 40, 30,22.4)
+                #rect(alienx+row*50, alieny+col * 40, 30,22.4)
+                
                 #checks for overlap of each bullet every frame
                 
                 #cbulletpos[i][1] is the y increment of the bullet in index i
@@ -379,4 +401,4 @@ def keyPressed():
             # does not spam lasers
             #print(cbulletpos)
             
-            #shootsound.play()
+            shootsound.play()
