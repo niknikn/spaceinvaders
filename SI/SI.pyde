@@ -373,14 +373,20 @@ def cbullet(x, y):
     rect(x, 606.25 - y, 5, 15) 
     
 def endscreen(): 
-    global game_state, endimagel,endimagew, won
+    global game_state, endimagel,endimagew, won, score, myFont
     if game_state == 2:
+        
+        
         
         if won == True:
             image(endimagew,0,0)
 
         else:
             image(endimagel,0,0)
+        textFont(myFont)
+        textSize(25)
+        textAlign(CENTER)
+        text("Score: %i" %(score), 350, 675)
             
 def keyPressed():
     global abulletdelay, adelaylen, delaylen, alienvx, alienvy, cspeed, bulletdelay, delaylen, cbulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
@@ -402,7 +408,7 @@ def keyPressed():
             alienvx = 1
             alienvy = 8
             delaylen = bulletdelay - 1
-            abulletdelay = 150
+            abulletdelay = 300
             adelaylen = abulletdelay - 1
         if key == "2":
             game_state = 1
