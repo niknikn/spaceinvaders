@@ -2,7 +2,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global levelimage,YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, delaylen, myFont, cbulletpos, bullety, laserShot, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
 
     size(700,750)
     
@@ -21,6 +21,7 @@ def setup():
     won = None
 
     introimage = loadImage('intro.jpg')
+    levelimage = loadImage('levels.png')
     cannon = loadImage('cannon.png')
     alien = loadImage('alien2.png')
     alien.resize(30, 0)
@@ -35,26 +36,24 @@ def setup():
     alienx = 70
     alieny = 125
     
-    alienvx = 1
-    alienvy = 10
+
     
     # player bullet variables -------------------
     # stores x position and y increment (actual bullet pos found with 606.25 - y) of each bullet as a list inside cbulletpos list
     cbulletpos = []
     
     # stores how long has passed since user shot the last laser
-    bulletdelay = 2
+    
     
     # stores the delay length between bullets
-    delaylen = bulletdelay - 1
+    
     
     # alien bullet variables -------------------
     
     #stores x position and y position of alien bullet
     abulletpos = []
 
-    abulletdelay = 100
-    adelaylen = abulletdelay - 1 
+     
     
     # life counter variables -----------
     numLives = 3
@@ -72,11 +71,15 @@ def setup():
 
 def draw():
     intro()
+    lvl()
     gameplay()
     endscreen()
     music()
     
-
+def lvl():
+    global game_state, levelimage
+    if game_state == 3:
+        image(levelimage,0,0)
 
 def music():
     global music_state, game_state
@@ -277,18 +280,18 @@ def checkforend():
         
         
 def sm(): 
-    global left, right, game_state, num, cannonx
+    global left, right, game_state, num, cannonx, cspeed
     
     if left:
-        cannonx -= 5 
-        num += 5
+        cannonx -= cspeed
+        num += cspeed
     
     if right:
-        cannonx += 5 
-        num += 5 
+        cannonx += cspeed
+        num += cspeed 
         
         
-    if num == 20:
+    if num == cspeed*4:
         num = 0 
         left = False 
         right = False
@@ -380,14 +383,51 @@ def endscreen():
             image(endimagel,0,0)
             
 def keyPressed():
-    global bulletdelay, delaylen, cbulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
+    global abulletdelay, adelaylen, delaylen, alienvx, alienvy, cspeed, bulletdelay, delaylen, cbulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
     
     if game_state == 0 and key == "s":
-        game_state = 1
-        music_state = 0 
+        game_state = 3
+    
         
     if game_state == 2 and key == "s":
         reset()
+        
+        
+    if game_state == 3:
+        if key == "1":
+            game_state = 1
+            music_state = 0
+            bulletdelay = 30
+            cspeed = 8
+            alienvx = 1
+            alienvy = 8
+            delaylen = bulletdelay - 1
+            abulletdelay = 150
+            adelaylen = abulletdelay - 1
+        if key == "2":
+            game_state = 1
+            music_state = 0
+            bulletdelay = 45
+            cspeed = 6 
+            alienvx = 1.25
+            alienvy = 12
+            delaylen = bulletdelay - 1
+            abulletdelay = 100
+            adelaylen = abulletdelay - 1
+        if key == "3":
+            game_state = 1
+            music_state = 0 
+            bulletdelay = 60
+            cspeed = 5
+            alienvx = 1.5
+            alienvy = 13
+            delaylen = bulletdelay - 1
+            abulletdelay = 75
+            adelaylen = abulletdelay - 1
+            
+            
+       
+
         
 
     
