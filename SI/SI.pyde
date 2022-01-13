@@ -1,5 +1,3 @@
-#testing branches
-hitnum = 0
 add_library('minim')
 import random 
 
@@ -29,7 +27,7 @@ def setup():
     cannonx = 0
     
     # game state variable -----------
-    game_state = 1
+    game_state = 0
     
     # alien spawn variables -----------
     invasion = [[1 for x in range(11)] for i in range(5)]
@@ -76,7 +74,7 @@ def draw():
     intro()
     gameplay()
     endscreen()
-    '''music()'''
+    music()
     
 
 
@@ -109,6 +107,12 @@ def music():
     if game_state == 1 and music_state == 0:
         roundsong.loop()
         music_state = 1 
+    if game_state == 2 and music_state == 0 and won == True:
+        winsong.play()
+        music_state = 1
+    if game_state == 2 and music_state == 0 and won == False:
+        endsong.play()
+        music_state = 1
         
 
 def gameplay(): 
@@ -254,22 +258,23 @@ def movealiens():
                     alienvy = 0
         
 def checkforend():
-    global game_state, invasion, alieny, alienvy, score, won
+    global game_state, invasion, alieny, alienvy, score, won, music_state
     if game_state == 1:
-        
         for row in range(len(invasion[0])):
             for col in range(len(invasion)):
                 
                 if invasion[col][row] == 1:
                     if alieny + col * 40 + 22.4 > 606.25 or numLives == 0:
-                        
                         alienvy = 0
                         game_state = 2 
                         won = False
+                        music_state = 0
                         
         if score == 550:
             game_state = 2
             won = True
+            music_state = 0 
+        
         
 def sm(): 
     global left, right, game_state, num, cannonx
@@ -296,11 +301,7 @@ def spawnAliens():
         for col in range(len(invasion)):
             if invasion[col][row] == 1:
                 image(alien, alienx + row * 50, alieny + col * 40)
-                
-                #draw hitboxes
-                noFill()
-                stroke(102,255,0)
-                rect(alienx+row*50, alieny+col * 40, 30,22.4)
+            
                 #checks for overlap of each bullet every frame
                 
                 #cbulletpos[i][1] is the y increment of the bullet in index i
@@ -323,7 +324,29 @@ def spawnAliens():
                         invasion[col][row] = 0 
                         score += 10#change to correct amount 
     alienx += alienvx
-           
+
+
+def reset():
+    global numLives, num, music_state, score, abulletpos, cannonx, game_state, invasion, alienx, alieny, alienvx, alienvy, musci_state 
+    numLives = 3
+    num = 0
+    music_state = 0
+    score = 0
+    abulletpos = []
+    cannonx = 0
+    
+    # game state variable -----------
+    game_state = 0
+    
+    # alien spawn variables -----------
+    invasion = [[1 for x in range(11)] for i in range(5)]
+    alienx = 70
+    alieny = 125
+    
+    alienvx = 1
+    alienvy = 10
+    music_state = 0 
+    
     
         
 def intro():
@@ -362,6 +385,12 @@ def keyPressed():
     if game_state == 0 and key == "s":
         game_state = 1
         music_state = 0 
+        
+    if game_state == 2 and key == "s":
+        reset()
+        
+
+    
 
     if game_state == 1:
         if key == CODED:
@@ -375,8 +404,9 @@ def keyPressed():
             # bulletx = cannonx+28.125
             cbulletpos.append([cannonx+28.125, 0])
             bulletdelay = 0 
+            shootsound.play()
             #trying to implement time buffer between each bullet shot, so player
             # does not spam lasers
             #print(cbulletpos)
             
-            #shootsound.play()
+            
