@@ -2,7 +2,7 @@ add_library('minim')
 import random 
 
 def setup():
-    global levelimage,YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, delaylen, myFont, cbulletpos, bullety, laserShot, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
+    global levelimage, YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletpos, myFont, cbulletpos, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
 
     size(700,750)
     
@@ -42,13 +42,6 @@ def setup():
     # stores x position and y increment (actual bullet pos found with 606.25 - y) of each bullet as a list inside cbulletpos list
     cbulletpos = []
     
-    # stores how long has passed since user shot the last laser
-    
-    
-    # stores the delay length between bullets
-    
-    
-    # alien bullet variables -------------------
     
     #stores x position and y position of alien bullet
     abulletpos = []
@@ -76,48 +69,7 @@ def draw():
     endscreen()
     music()
     
-def lvl():
-    global game_state, levelimage
-    if game_state == 3:
-        image(levelimage,0,0)
-
-def music():
-    global music_state, game_state
     
-    if music_state == 0:
-        if introsong.isPlaying():
-            introsong.pause()
-            introsong.rewind()
-            
-        elif roundsong.isPlaying():
-            roundsong.pause()
-            roundsong.rewind()
-            
-        elif endsong.isPlaying():
-            endsong.pause()
-            endsong.rewind()
-            
-        elif winsong.isPlaying():
-            winsong.pause()
-            winsong.rewind()
-        
-            
-    
-    if game_state == 0 and music_state == 0:
-        introsong.loop()
-        music_state = 1
-        
-    if game_state == 1 and music_state == 0:
-        roundsong.loop()
-        music_state = 1 
-    if game_state == 2 and music_state == 0 and won == True:
-        winsong.play()
-        music_state = 1
-    if game_state == 2 and music_state == 0 and won == False:
-        endsong.play()
-        music_state = 1
-        
-
 def gameplay(): 
     global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
     if game_state == 1:
@@ -183,6 +135,52 @@ def gameplay():
         # the aliens are to the bottom of the screen
         adelaylen = (606.25-alieny)/5
     
+
+def music():
+    #fn that controls the music state depending on what screen your on 
+    global music_state, game_state
+    
+    if music_state == 0:
+        if introsong.isPlaying():
+            introsong.pause()
+            introsong.rewind()
+            
+        elif roundsong.isPlaying():
+            roundsong.pause()
+            roundsong.rewind()
+            
+        elif endsong.isPlaying():
+            endsong.pause()
+            endsong.rewind()
+            
+        elif winsong.isPlaying():
+            winsong.pause()
+            winsong.rewind()
+        
+    
+    if game_state == 0 and music_state == 0:
+        introsong.loop()
+        music_state = 1
+        
+    if game_state == 1 and music_state == 0:
+        roundsong.loop()
+        music_state = 1 
+    if game_state == 2 and music_state == 0 and won == True:
+        winsong.play()
+        music_state = 1
+    if game_state == 2 and music_state == 0 and won == False:
+        endsong.play()
+        music_state = 1
+       
+#shows level screen
+def lvl():
+    global game_state, levelimage
+    if game_state == 3:
+        image(levelimage,0,0)
+
+
+
+    
 # displays life counter
 def lifeCounter():
     global YlifeCounter, XlifeCounter, won, endimagew ,endimagel, numLives, abulletdelay, adelaylen, abulletpos, bulletdelay, delaylen, myFont, cbulletpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, num, introsong, roundsong, endsong, winsong, music_state, shootsound
@@ -240,7 +238,7 @@ def isPlayerHit():
 
 def movealiens():
     global cbulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
-    
+    #fn to move the aliens 
 
     for row in range(len(invasion[0])):
         for col in range(len(invasion)):
@@ -261,13 +259,15 @@ def movealiens():
                     alienvy = 0
         
 def checkforend():
+    #check for end games
     global game_state, invasion, alieny, alienvy, score, won, music_state
     if game_state == 1:
+        #checking if any aliens are touching the bottom/earth
         for row in range(len(invasion[0])):
             for col in range(len(invasion)):
-                
                 if invasion[col][row] == 1:
                     if alieny + col * 40 + 22.4 > 606.25 or numLives == 0:
+                    
                         alienvy = 0
                         game_state = 2 
                         won = False
@@ -281,6 +281,7 @@ def checkforend():
         
 def sm(): 
     global left, right, game_state, num, cannonx, cspeed
+    #fn to move the cannon smoothly 
     
     if left:
         cannonx -= cspeed
@@ -316,20 +317,15 @@ def spawnAliens():
                         
                         # despawns bullet that hit an alien
                         cbulletpos[i][1] = 900
-                        
-                        # in order to circumvent an index out of range error, 
-                        # i basically just set the y position to a stupid big number
-                        # so that it isnt in the screen, but on line 96
-                        # i get rid of the bullet that hit the alien 
-                        # the solution is dumb help me figure out a better one if u can
 
                         laserShot = False 
                         invasion[col][row] = 0 
-                        score += 10#change to correct amount 
+                        score += 10# 
     alienx += alienvx
 
 
 def reset():
+    #sets all variables back to original state to start a new game 
     global numLives, num, music_state, score, abulletpos, cannonx, game_state, invasion, alienx, alieny, alienvx, alienvy, musci_state 
     numLives = 3
     num = 0
@@ -337,11 +333,10 @@ def reset():
     score = 0
     abulletpos = []
     cannonx = 0
-    
-    # game state variable -----------
+
     game_state = 0
     
-    # alien spawn variables -----------
+
     invasion = [[1 for x in range(11)] for i in range(5)]
     alienx = 70
     alieny = 125
@@ -353,11 +348,13 @@ def reset():
     
         
 def intro():
+    #drawing the intro screen
     global bulletypos, bulletxpos, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion
     if game_state == 0:
         image(introimage,0,0)
 
 def scoreboard():
+    #fn to draw scoreboard on gampleay screen
     global score, myFont
     textFont(myFont)
     textSize(25)
@@ -374,15 +371,16 @@ def cbullet(x, y):
     
 def endscreen(): 
     global game_state, endimagel,endimagew, won, score, myFont
+    #if game is set to end screen
     if game_state == 2:
-        
-        
-        
+        # if you won show win screen
         if won == True:
             image(endimagew,0,0)
-
+        
+        #if lost show lose screen
         else:
             image(endimagel,0,0)
+        #show the score on the end screen
         textFont(myFont)
         textSize(25)
         textAlign(CENTER)
@@ -390,15 +388,16 @@ def endscreen():
             
 def keyPressed():
     global abulletdelay, adelaylen, delaylen, alienvx, alienvy, cspeed, bulletdelay, delaylen, cbulletpos, bulletx, bullety, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, left, right, music_state, shootsound
-    
+
+# if s is pressed on intro screen go to level select screen    
     if game_state == 0 and key == "s":
         game_state = 3
     
-        
+#if s is pressed on end screen start a new game        
     if game_state == 2 and key == "s":
         reset()
         
-        
+#sets difficulty when on the difficulty screen     
     if game_state == 3:
         if key == "1":
             game_state = 1
@@ -440,19 +439,17 @@ def keyPressed():
 
     if game_state == 1:
         if key == CODED:
+            #if left or right key is pressed and cannon is in the screen call the move fn 
             if keyCode == RIGHT and cannonx< (681-(450/8)) and left == False:
                 right = True
             elif keyCode == LEFT and cannonx>19 and right == False:
                 left = True 
-                
+        # if space is pressed         
         if key == ' ' and bulletdelay > delaylen:
-            # laserShot = True
-            # bulletx = cannonx+28.125
+        # if space is pressed and there isnt a delay in place shoot a bullet
             cbulletpos.append([cannonx+28.125, 0])
             bulletdelay = 0 
             shootsound.play()
-            #trying to implement time buffer between each bullet shot, so player
-            # does not spam lasers
-            #print(cbulletpos)
+        
             
             
