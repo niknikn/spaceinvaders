@@ -234,9 +234,6 @@ def abullet(x, y):
     rect(x - 2.5, y, 2, 10)     
 
 
-def isPlayerHit():
-    #runs if bullet past a certain threshhold
-    pass
 
 def movealiens():
     global cbulletpos, bullety, bulletx, laserShot, alienvx, alienvy, alienx, alieny, introimage, cannon, cannonx, score, game_state, alien, invasion, score 
